@@ -6,7 +6,7 @@ private func ip(_ s: String) -> IPNet { IPNet(s)! }
 
 private func stateWith4pda() -> AppState {
     var s = AppState()
-    s.load(config: WGConfig(allowedIPs: [ip("0.0.0.0/0")], endpoint: "pl-waw.prod.surfshark.com:51820"), fileName: "pl.conf")
+    s.load(config: WGConfig(allowedIPs: [ip("0.0.0.0/0")], endpoint: "vpn.example.com:51820"), fileName: "pl.conf")
     _ = s.addSite("4pda.to")
     return s
 }
@@ -42,10 +42,10 @@ private func stateWith4pda() -> AppState {
     var s = stateWith4pda()
     s.merge(resolved: ["4pda.to": [ip("104.20.39.144")]])
     let generated = s.computedAllowedIPs
-    s.load(config: WGConfig(allowedIPs: generated, endpoint: "pl-waw.prod.surfshark.com:51820"), fileName: "pl.conf")
+    s.load(config: WGConfig(allowedIPs: generated, endpoint: "vpn.example.com:51820"), fileName: "pl.conf")
     #expect(!s.sites[0].hasNewIPs)
     #expect(!s.needsUpdate)
-    s.load(config: WGConfig(allowedIPs: [ip("0.0.0.0/0")], endpoint: "pl-waw.prod.surfshark.com:51820"), fileName: "pl.conf")
+    s.load(config: WGConfig(allowedIPs: [ip("0.0.0.0/0")], endpoint: "vpn.example.com:51820"), fileName: "pl.conf")
     #expect(s.sites[0].hasNewIPs)
 }
 
