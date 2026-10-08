@@ -6,7 +6,7 @@
 ![Platform: macOS 15+](https://img.shields.io/badge/platform-macOS%2015%2B-lightgrey)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-support-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/vpotar)
 
-[Install](#install) · [Use](#use) · [How it works](#how-it-works) · [Privacy](#privacy) · [Limits](#limits) · [Build](#build) · [Contributing](#contributing) · [Security](#security) · [Support](#support) · [License](#license)
+[Install](#install) · [Use](#use) · [How it works](#how-it-works) · [Privacy](#privacy) · [Limits](#limits) · [Contributing](#contributing) · [Security](#security) · [Support](#support) · [License](#license)
 
 A macOS menu bar app that keeps chosen sites outside a WireGuard full tunnel. You add the sites that must bypass the VPN; the app resolves their IP addresses, recomputes the `AllowedIPs` line of your tunnel so those addresses are excluded, and warns you when a site gets a new IP or starts failing, so you know when to update the tunnel in WireGuard.
 
@@ -42,18 +42,9 @@ The private key is never stored. The only network requests are DNS lookups and H
 - One `[Peer]` per config.
 - Any active `utun` VPN (for example a Tailscale exit node or a corporate VPN) is read as "tunnel on". Turn other VPNs off for accurate checks.
 
-## Build
-
-```
-swift test
-scripts/make-app.sh <version>
-```
-
-The app and a zip are written to `dist/`.
-
 ## Contributing
 
-Contributions are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md).
+Contributions are welcome. Developers: see [CONTRIBUTING.md](CONTRIBUTING.md) for building, testing and the project rules.
 
 ## Security
 
