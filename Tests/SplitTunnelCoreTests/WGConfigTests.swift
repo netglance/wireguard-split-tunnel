@@ -9,15 +9,15 @@ Address = 10.14.0.2/16
 DNS = 162.252.172.57, 149.154.159.92
 
 [Peer]
-PublicKey = c3VyZnNoYXJrIHB1YmxpYyBrZXkgZXhhbXBsZSBvbmx5IQ=
+PublicKey = ZXhhbXBsZSBwdWJsaWMga2V5LCBub3QgYSByZWFsIG9uZSEh
 AllowedIPs = 0.0.0.0/0
-Endpoint = pl-waw.prod.surfshark.com:51820
+Endpoint = vpn.example.com:51820
 """
 
-@Test func parsesSurfsharkConfig() throws {
+@Test func parsesSampleConfig() throws {
     let config = try parseConfig(sampleConfig)
     let keep = ["10.14.0.0/16", "162.252.172.57/32", "149.154.159.92/32"].map { IPNet($0)! }
-    #expect(config == WGConfig(allowedIPs: [IPNet("0.0.0.0/0")!], endpoint: "pl-waw.prod.surfshark.com:51820", keepInTunnel: keep))
+    #expect(config == WGConfig(allowedIPs: [IPNet("0.0.0.0/0")!], endpoint: "vpn.example.com:51820", keepInTunnel: keep))
 }
 
 @Test func keepInTunnelTakesOnlyInterfaceAddressAndIPDNS() throws {
@@ -57,8 +57,8 @@ Endpoint = pl-waw.prod.surfshark.com:51820
 }
 
 @Test func tunnelNameFromFileOrEndpoint() {
-    #expect(makeTunnelName(fileName: "surfshark-pl-waw.conf", endpoint: "x:1") == "surfshark-pl-waw")
-    #expect(makeTunnelName(fileName: nil, endpoint: "pl-waw.prod.surfshark.com:51820") == "pl-waw.prod.surfshark.com")
+    #expect(makeTunnelName(fileName: "home-vpn.conf", endpoint: "x:1") == "home-vpn")
+    #expect(makeTunnelName(fileName: nil, endpoint: "vpn.example.com:51820") == "vpn.example.com")
     #expect(makeTunnelName(fileName: nil, endpoint: "[2001:db8::1]:51820") == "2001:db8::1")
 }
 

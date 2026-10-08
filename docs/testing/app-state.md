@@ -34,6 +34,6 @@ Covers `AppState`, the model behind the UI: the site list, resolved IPs (`seen`,
 
 ## Fixtures
 
-- `stateWith4pda()` loads a full-tunnel config (`0.0.0.0/0`, endpoint `pl-waw.prod.surfshark.com:51820`, file `pl.conf`) and adds `4pda.to`. Addresses such as `104.20.39.144` are public; `192.168.1.10` stands for a local device.
+- `stateWith4pda()` loads a full-tunnel config (`0.0.0.0/0`, endpoint `vpn.example.com:51820`, file `pl.conf`) and adds `4pda.to`. Addresses such as `104.20.39.144` are public; `192.168.1.10` stands for a local device.
 - `SiteProbe(domain:route:reply:)` is a hand-built check result; no network is used.
 - The persistence tests write to a unique directory under the system temp folder and remove it afterwards. `cannotSaveWhenBrokenFileCannotBeMovedAside` sets the directory to mode `0o500`, then restores it so cleanup works.
