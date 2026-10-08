@@ -1,0 +1,122 @@
+/* English text is the key; %@ is a String, %lld an Int, in the order they appear in the code.
+   ponytail: a plain .strings file has no plurals, so counts are phrased as "Сайтов мимо VPN: %lld" and
+   "диапазонов IPv4: %lld", which read correctly for any number. If the wording must vary by number, move
+   those keys to a Localizable.stringsdict. */
+
+/* Panel */
+"Tunnel on" = "Туннель включён";
+"Tunnel off" = "Туннель выключен";
+"Load a WireGuard config to start." = "Загрузите конфиг WireGuard, чтобы начать.";
+"Load Config…" = "Загрузить конфиг…";
+"The address does not resolve. Check the spelling." = "Адрес не найден. Проверьте написание.";
+"More" = "Ещё";
+"No network" = "Нет сети";
+"The check will run when the connection is back." = "Проверка пройдёт, когда появится соединение.";
+"The site goes through the VPN and blocks it. Update AllowedIPs in WireGuard." = "Сайт идёт через VPN и не пускает с его адреса. Обновите AllowedIPs в WireGuard.";
+"The site blocks this connection even without the VPN; the tunnel is not the cause." = "Сайт блокирует это соединение и без VPN, туннель тут ни при чём.";
+"Update in WireGuard…" = "Обновить в WireGuard…";
+"Waiting for you to update the tunnel" = "Ждём, пока вы обновите туннель";
+"WireGuard still uses the old AllowedIPs." = "WireGuard пока работает со старыми AllowedIPs.";
+"Show Steps" = "Показать шаги";
+"%@ has a new IP" = "У %@ появился новый IP";
+"It goes through the VPN for now. Update AllowedIPs in WireGuard." = "Сейчас он идёт через VPN. Обновите AllowedIPs в WireGuard.";
+"%@ goes through the VPN" = "%@ идёт через VPN";
+"Update AllowedIPs in WireGuard." = "Обновите AllowedIPs в WireGuard.";
+"AllowedIPs in WireGuard are out of date" = "AllowedIPs в WireGuard устарели";
+"The WireGuard tunnel is off" = "Туннель WireGuard выключен";
+"All traffic bypasses the VPN. The route is checked when the tunnel is on." = "Весь трафик идёт мимо VPN. Маршрут проверим, когда туннель включится.";
+"Sites bypassing the VPN: %lld" = "Сайтов мимо VPN: %lld";
+"No sites yet" = "Сайтов пока нет";
+"Add a site in the window." = "Добавьте сайт в окне.";
+"Open Window" = "Открыть окно";
+"Was the app useful?" = "Программа пригодилась?";
+"☕ Buy the author a coffee" = "☕ Угостить автора кофе";
+"Hide forever" = "Скрыть навсегда";
+"Checked at %@" = "Проверено в %@";
+"Check Now" = "Проверить сейчас";
+"Open at Login" = "Открывать при входе";
+"Support the Author…" = "Поддержать автора…";
+"Quit" = "Выйти";
+
+/* Site status line, replies, routes */
+"429 Too Many Requests" = "429 Слишком много запросов";
+"403 Forbidden" = "403 Доступ запрещён";
+"captcha" = "капча";
+"no response" = "нет ответа";
+"not found" = "не найден";
+"bypasses VPN" = "мимо VPN";
+"through VPN" = "через VPN";
+"route not checked" = "маршрут не проверен";
+"not checked yet" = "ещё не проверен";
+"new IP · %@" = "новый IP · %@";
+"new IP goes through VPN" = "новый IP идёт через VPN";
+
+/* Notifications */
+"%@ is not working: %@. Update AllowedIPs in WireGuard." = "%@ не работает: %@. Обновите AllowedIPs в WireGuard.";
+"%@: the address does not resolve. Check the spelling." = "%@: адрес не найден. Проверьте написание.";
+"%@ is not working: %@. The site blocks this connection even without the VPN." = "%@ не работает: %@. Сайт не пускает и без VPN.";
+"%@ has a new IP. Update AllowedIPs in WireGuard, or the site will go through the VPN." = "У %@ новый IP. Обновите AllowedIPs в WireGuard, иначе сайт пойдёт через VPN.";
+
+/* Config errors */
+"The config has no [Peer] section." = "В конфиге нет секции [Peer].";
+"The config has several [Peer] sections. Only one is supported." = "В конфиге несколько секций [Peer]. Поддерживается только одна.";
+"The [Peer] section has no AllowedIPs line." = "В секции [Peer] нет строки AllowedIPs.";
+"The [Peer] section has no Endpoint line." = "В секции [Peer] нет строки Endpoint.";
+"AllowedIPs has an invalid address: %@" = "В AllowedIPs неверный адрес: %@";
+
+/* Main window */
+"Server %@ · AllowedIPs: %lld IPv4 ranges, %lld IPv6" = "Сервер %@ · AllowedIPs, диапазонов IPv4: %lld, IPv6: %lld";
+"Replace…" = "Заменить…";
+"Local network bypasses the VPN" = "Локальная сеть мимо VPN";
+"Router, printers, AirPlay and other devices at home. The tunnel's own address and DNS always stay in the tunnel." = "Роутер, принтеры, AirPlay и другие устройства дома. Адрес и DNS самого туннеля всегда остаются в туннеле.";
+"Already excluded in the config: %lld ranges" = "Уже исключено в конфиге, диапазонов: %lld";
+"Site address: 4pda.to or https://4pda.to/forum/…" = "Адрес сайта: 4pda.to или https://4pda.to/forum/…";
+"Add" = "Добавить";
+"If a site opens only partly, add the domains of its images and CDN." = "Если сайт открылся не полностью, добавьте домены его картинок и CDN.";
+"Site" = "Сайт";
+"IP addresses" = "IP-адреса";
+"Route" = "Маршрут";
+"Response" = "Ответ сайта";
+"Remove" = "Удалить";
+"Remove %@?" = "Удалить %@?";
+"Remove %lld sites?" = "Удалить сайтов: %lld?";
+"Split Tunnel %@ · the config stays on this Mac" = "Split Tunnel %@ · конфиг хранится только на этом Mac";
+"Version %@ is available — download" = "Доступна версия %@ — скачать";
+
+/* Onboarding */
+"Drop a .conf file here" = "Перетащите сюда файл .conf";
+"Choose File…" = "Выбрать файл…";
+"Paste from Clipboard" = "Вставить из буфера";
+"Cancel" = "Отмена";
+"No file? In WireGuard select the tunnel, click Edit and copy all the text. Or use Export Tunnels to Zip." = "Нет файла? В WireGuard выберите туннель, нажмите «Изменить» и скопируйте весь текст. Или «Экспорт туннелей в ZIP».";
+"The private key is not stored and never leaves this Mac." = "Приватный ключ не сохраняется и никуда не отправляется.";
+"Could not read the file." = "Не удалось прочитать файл.";
+
+/* Update tunnel sheet */
+"Update tunnel %@" = "Обновить туннель %@";
+"New AllowedIPs are ready: %lld IPv4 ranges, %lld IPv6. Choose a way." = "Новые AllowedIPs готовы. Диапазонов IPv4: %lld, IPv6: %lld. Выберите способ.";
+"Replace one line" = "Заменить одну строку";
+"Tunnel settings and On-Demand rules are kept" = "Настройки туннеля и правила On-Demand сохранятся";
+"Click Copy." = "Нажмите «Скопировать».";
+"In WireGuard select the tunnel and click Edit." = "В WireGuard выберите туннель и нажмите «Изменить».";
+"Replace the AllowedIPs line and click Save." = "Замените строку AllowedIPs и нажмите «Сохранить».";
+"Copy AllowedIPs" = "Скопировать AllowedIPs";
+"Copied" = "Скопировано";
+"Import a file" = "Импортировать файл";
+"On-Demand rules have to be set up again" = "Правила On-Demand придётся настроить заново";
+"Save the .conf file." = "Сохраните файл .conf.";
+"In WireGuard delete the old tunnel." = "В WireGuard удалите старый туннель.";
+"Import the tunnel from the file and turn it on." = "Импортируйте туннель из файла и включите его.";
+"Save .conf…" = "Сохранить .conf…";
+"Done" = "Готово";
+"Open WireGuard" = "Открыть WireGuard";
+
+/* Errors and panels */
+"Enter a site address, for example 4pda.to" = "Введите адрес сайта, например 4pda.to";
+"%@ is already in the list" = "%@ уже в списке";
+"Choose the original WireGuard config. The private key is read from it and not stored." = "Выберите исходный конфиг WireGuard. Приватный ключ читается из него и не сохраняется.";
+"This is a different config: its server does not match %@." = "Это другой конфиг: его сервер не совпадает с %@.";
+"Could not save the file." = "Не удалось сохранить файл.";
+"WireGuard is not installed." = "WireGuard не установлен.";
+"Could not save settings: %@" = "Не удалось сохранить настройки: %@";
+"Settings file is unreadable and could not be moved aside; changes will not be saved." = "Файл настроек не читается и его не удалось отложить, изменения не сохранятся.";
