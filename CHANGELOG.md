@@ -14,7 +14,6 @@ All notable changes to this project are documented here. The format is based on 
 - "Local network bypasses the VPN" toggle.
 - Exclusions already present in the config's `AllowedIPs` are preserved and shown.
 - The tunnel's own `Address` and `DNS` always stay in the tunnel.
-- English and Russian UI.
 - Daily check for a new version.
 
 [0.1.0]: https://github.com/netglance/wireguard-split-tunnel/releases/tag/v0.1.0
