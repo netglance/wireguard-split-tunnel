@@ -25,6 +25,7 @@ struct PanelView: View {
                         Spacer()
                         Text(siteSummary(site)).font(.caption).foregroundStyle(.secondary)
                     }
+                    .accessibilityElement(children: .combine) // VoiceOver reads "domain, status" as one item; the dot is decorative
                 }
                 Divider()
                 footer

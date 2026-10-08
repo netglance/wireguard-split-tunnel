@@ -14,6 +14,8 @@ swift run SplitTunnel       # run for development
 scripts/make-app.sh 0.1.0   # build dist/SplitTunnel.app and a zip (universal, ad-hoc signed)
 ```
 
+The version comes only from the `make-app.sh` argument, which replaces `__VERSION__` in `Resources/Info.plist`; `swift run` shows "dev".
+
 Test documentation: [docs/testing/README.md](docs/testing/README.md).
 
 Notifications need the bundled app, so they do not work under `swift run`; use `scripts/make-app.sh` and open `dist/SplitTunnel.app` to test them.
