@@ -6,21 +6,36 @@
 ![Platform: macOS 15+](https://img.shields.io/badge/platform-macOS%2015%2B-lightgrey)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-support-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/vpotar)
 
-[Install](#install) · [Use](#use) · [How it works](#how-it-works) · [Privacy](#privacy) · [Limits](#limits) · [Uninstall](#uninstall) · [Troubleshooting](#troubleshooting) · [Contributing](#contributing) · [Security](#security) · [Support](#support) · [License](#license)
+[Install](#install) · [Update](#update) · [Use](#use) · [How it works](#how-it-works) · [Privacy](#privacy) · [Limits](#limits) · [Uninstall](#uninstall) · [Troubleshooting](#troubleshooting) · [Contributing](#contributing) · [Security](#security) · [Support](#support) · [License](#license)
 
 A macOS menu bar app that keeps chosen sites outside a WireGuard full tunnel. You add the sites that must bypass the VPN; the app resolves their IP addresses, recomputes the `AllowedIPs` line of your tunnel so those addresses are excluded, and warns you when a site gets a new IP or starts failing, so you know when to update the tunnel in WireGuard.
 
 ## Install
 
-1. Download `SplitTunnel-<version>.zip` from [Releases](https://github.com/netglance/wireguard-split-tunnel/releases), unzip it and move `SplitTunnel.app` to Applications.
-2. The app is not notarized, so macOS blocks the first launch. Open System Settings → Privacy & Security → "Open Anyway", or run:
+Requirements: macOS 15 or later (Apple silicon or Intel; the build is universal) and the [WireGuard app for macOS](https://www.wireguard.com/install/), which this app opens to update the tunnel.
+
+1. Download `SplitTunnel-<version>.zip` and `SplitTunnel-<version>.sha256` from [Releases](https://github.com/netglance/wireguard-split-tunnel/releases) into the same folder.
+2. Verify the download before opening it. In that folder run:
+   ```
+   shasum -a 256 -c SplitTunnel-<version>.sha256
+   ```
+   It must print `SplitTunnel-<version>.zip: OK`.
+3. Unzip it and move `SplitTunnel.app` to Applications.
+4. The app is not notarized, so macOS blocks the first launch. Try to open the app once, then open System Settings → Privacy & Security and click "Open Anyway". Alternatively, run:
    ```
    xattr -dr com.apple.quarantine /Applications/SplitTunnel.app
    ```
 
-Verify the download: run `shasum -a 256 SplitTunnel-<version>.zip` and compare the result with the `SplitTunnel-<version>.sha256` file attached to the release.
+## Update
 
-Requires macOS 15 or later.
+The app checks for a new version on launch and about every 24 hours. When one is found, the main window shows "Version … is available — download".
+
+1. Download the new zip and its `.sha256` file and verify them as in Install.
+2. Quit the app (⋯ menu in the panel).
+3. Replace `/Applications/SplitTunnel.app` with the new one.
+4. Repeat the Gatekeeper step: try to open the app once, then "Open Anyway" in Privacy & Security.
+
+Your settings and sites are kept.
 
 ## Use
 
@@ -44,15 +59,15 @@ WireGuard cannot exclude a domain from a full tunnel, only IP ranges. The app re
 
 ## Privacy
 
-The app has no account, analytics or telemetry. It stores one file, `~/Library/Application Support/SplitTunnel/state.json`: the tunnel name, the server endpoint, the original `AllowedIPs`, your site list with the IP addresses and results of the last checks, and a few interface settings. The private key is never stored. "Save .conf…" reads it from the original file you pick, writes it only into the new file you choose (mode 0600), and keeps nothing.
+The app has no account, analytics or telemetry. It stores one file, `~/Library/Application Support/SplitTunnel/state.json`: the tunnel name, the server endpoint, the original `AllowedIPs`, the tunnel's `Address` and `DNS` addresses (kept in the tunnel), the `AllowedIPs` line you last copied or saved, your site list with the IP addresses and results of the last checks, and a few interface settings. The private key is never stored. "Save .conf…" reads it from the original file you pick, writes it only into the new file you choose (mode 0600), and keeps nothing.
 
 The app makes three kinds of network requests, and nothing else:
 
 - DNS lookups through the system resolver for your sites (and their `www.` variant), plus one for `apple.com` to tell a dead network from a mistyped site.
-- One HTTPS GET to `https://<site>/` for each site, with a Safari User-Agent and a 10-second timeout. This runs every 30 minutes and when you click "Check Now".
-- One unauthenticated GET to `https://api.github.com/repos/netglance/wireguard-split-tunnel/releases/latest` on launch and then about every 24 hours, to look for a new version. There is no setting to turn it off.
+- One HTTPS GET to `https://<site>/` for each site, with a Safari User-Agent and a 10-second timeout. This runs every 30 minutes and when you click "Check Now". Redirects are followed, so the sites a site redirects to are contacted too.
+- One unauthenticated GET to `https://api.github.com/repos/netglance/wireguard-split-tunnel/releases/latest` on launch and then about every 24 hours, to look for a new version. It uses no disk cache. There is no setting to turn it off.
 
-If `state.json` is unreadable, the app moves it aside as `state.json.<id>.broken` and keeps the newest three such files.
+If `state.json` is unreadable, the app moves it aside as `state.json.<id>.broken` and keeps the newest three such files. macOS itself may also keep window positions in `~/Library/Preferences/com.netglance.splittunnel.plist`.
 
 ## Limits
 
@@ -66,7 +81,8 @@ If `state.json` is unreadable, the app moves it aside as `state.json.<id>.broken
 2. Quit the app from the same menu.
 3. Delete `/Applications/SplitTunnel.app`.
 4. Delete the folder `~/Library/Application Support/SplitTunnel`.
-5. Optional: remove "Split Tunnel" in System Settings → Notifications.
+5. Optional: delete `~/Library/Preferences/com.netglance.splittunnel.plist` (window positions).
+6. Optional: remove "Split Tunnel" in System Settings → Notifications.
 
 An `AllowedIPs` line you copied into WireGuard stays there. Restore your original line (or import your original `.conf` again) to send all traffic through the tunnel.
 

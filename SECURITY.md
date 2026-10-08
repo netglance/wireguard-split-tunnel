@@ -21,4 +21,4 @@ In scope:
 
 ## What the app does
 
-The app never stores the private key. It makes no network requests except DNS lookups, HTTPS checks of the sites you add, and a check for a new release on GitHub.
+The app never stores the private key. It makes no network requests except DNS lookups, HTTPS checks of the sites you add, and a check for a new release on GitHub. HTTPS checks follow redirects.

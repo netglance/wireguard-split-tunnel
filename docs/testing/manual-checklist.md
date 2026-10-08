@@ -1,6 +1,6 @@
 # Manual checklist
 
-Run this end-to-end pass on a built app (`scripts/make-app.sh`, open `dist/SplitTunnel.app`) before every release. The unit tests do not cover the UI, notifications, the menu bar or the real tunnel.
+Run this end-to-end pass on a built app (`scripts/make-app.sh 0.0.0-dev`, open `dist/SplitTunnel.app`) before every release. The unit tests do not cover the UI, notifications, the menu bar or the real tunnel.
 
 Use a test WireGuard tunnel. Never paste real private keys or server addresses into issues or pull requests.
 

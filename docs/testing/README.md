@@ -11,7 +11,7 @@ swift test --filter CalculatorTests     # one suite
 
 ## CI
 
-`.github/workflows/ci.yml` runs `swift build` and `swift test` on `macos-15` for every push to `main` and every pull request.
+`.github/workflows/ci.yml` runs `swift build` and `swift test` on `macos-15` for every push to `main` and every pull request. It also builds the app bundle with `scripts/make-app.sh` and uploads it as an artifact. The Release workflow (`.github/workflows/release.yml`) runs `swift test` too, before it builds.
 
 ## Rule
 

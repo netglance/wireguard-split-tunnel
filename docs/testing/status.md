@@ -2,7 +2,7 @@
 
 File: `Tests/SplitTunnelCoreTests/StatusTests.swift`. Run: `swift test --filter StatusTests`.
 
-Covers how a site check becomes a status: `classify` (HTTP reply to `Reply`), `parseRouteInterface` and `aggregateRoute` (where traffic goes) and `SiteStatus.level` (what the panel shows). These decide the green, yellow, grey and red states and when the user is warned.
+Covers how a site check becomes a status: `classify` (HTTP reply to `Reply`), `parseRouteInterface` and `aggregateRoute` (where traffic goes) and `SiteStatus.level` (what the panel shows). These decide the green, orange, grey and red states and when the user is warned.
 
 | Test | What it checks |
 |---|---|
