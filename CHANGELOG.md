@@ -8,6 +8,8 @@ All notable changes to this project are documented here. The format is based on 
 
 - Copyright line in About and Get Info.
 - VoiceOver labels on status indicators.
+- Release workflow: pushing a `v*` tag builds the universal app, attaches the zip and its `.sha256` to a GitHub release, and uses the changelog section as notes.
+- CI builds the app bundle and uploads it as an artifact.
 
 ### Changed
 
