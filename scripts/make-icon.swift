@@ -1,5 +1,5 @@
 // Renders Resources/AppIcon.icns: white SF Symbol shield on a blue rounded square.
-// Usage: swift scripts/make-icon.swift
+// Usage: swift scripts/make-icon.swift   (run from the repository root)
 import AppKit
 
 let iconset = URL(fileURLWithPath: NSTemporaryDirectory()).appending(path: "AppIcon.iconset")
@@ -31,3 +31,4 @@ task.arguments = ["-c", "icns", iconset.path, "-o", "Resources/AppIcon.icns"]
 try task.run()
 task.waitUntilExit()
 print(task.terminationStatus == 0 ? "Wrote Resources/AppIcon.icns" : "iconutil failed")
+exit(task.terminationStatus)

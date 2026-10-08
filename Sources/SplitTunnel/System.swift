@@ -81,6 +81,6 @@ func probeHTTP(_ domain: String) async -> Reply {
 struct Release: Decodable { let tag_name: String; let html_url: URL }
 
 func latestRelease() async -> Release? {
-    guard let (data, _) = try? await URLSession.shared.data(from: releasesURL) else { return nil }
+    guard let (data, _) = try? await probeSession.data(from: releasesURL) else { return nil }
     return try? JSONDecoder().decode(Release.self, from: data)
 }
