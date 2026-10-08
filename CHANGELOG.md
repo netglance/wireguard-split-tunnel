@@ -2,6 +2,17 @@
 
 All notable changes to this project are documented here. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- Copyright line in About and Get Info.
+- VoiceOver labels on status indicators.
+
+### Changed
+
+- `make-app.sh` requires a version argument.
+
 ## [0.1.0] - 2026-10-08
 
 ### Added
@@ -16,4 +27,5 @@ All notable changes to this project are documented here. The format is based on 
 - The tunnel's own `Address` and `DNS` always stay in the tunnel.
 - Daily check for a new version.
 
+[Unreleased]: https://github.com/netglance/wireguard-split-tunnel/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/netglance/wireguard-split-tunnel/releases/tag/v0.1.0

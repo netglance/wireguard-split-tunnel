@@ -1,9 +1,9 @@
 #!/bin/bash
 # Builds dist/SplitTunnel.app (universal, ad-hoc signed) and dist/SplitTunnel-<version>.zip.
-# Usage: scripts/make-app.sh [version]
+# Usage: scripts/make-app.sh <version>
 set -euo pipefail
 cd "$(dirname "$0")/.."
-VERSION="${1:-0.1.0}"
+VERSION="${1:?usage: scripts/make-app.sh <version>   (e.g. 0.1.1; fills __VERSION__ in Info.plist)}"
 APP=dist/SplitTunnel.app
 
 swift build -c release --arch arm64 --arch x86_64
