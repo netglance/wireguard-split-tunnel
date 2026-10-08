@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch: # dry run: builds and uploads an artifact, creates no release
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-15
+    env:
+      VERSION: ${{ github.ref_type == 'tag' && github.ref_name || '0.0.0-dry' }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Compute version
+        run: echo "VERSION=${VERSION#v}" >> "$GITHUB_ENV"
+      - run: swift test
+      - run: scripts/make-app.sh "$VERSION"
+      - name: Checksum
+        run: |
+          cd dist
+          shasum -a 256 "SplitTunnel-$VERSION.zip" > "SplitTunnel-$VERSION.sha256"
+          cat "SplitTunnel-$VERSION.sha256"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SplitTunnel
+          path: |
+            dist/SplitTunnel-*.zip
+            dist/SplitTunnel-*.sha256
+      - name: Create release
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Notes = the CHANGELOG section "## [<version>]", up to the next "## [" heading.
+          notes=$(awk -v h="## [$VERSION]" 'index($0, h) == 1 {p=1; next} /^## \[/ {p=0} p' CHANGELOG.md)
+          # No --clobber: creating over an existing release must fail.
+          gh release create "$GITHUB_REF_NAME" \
+            "dist/SplitTunnel-$VERSION.zip" "dist/SplitTunnel-$VERSION.sha256" \
+            --title "Split Tunnel $VERSION" --notes "${notes:-See CHANGELOG.md}" --verify-tag

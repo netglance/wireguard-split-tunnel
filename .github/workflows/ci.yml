@@ -21,3 +21,9 @@ jobs:
       - run: swift --version
       - run: swift build
       - run: swift test
+      - run: scripts/make-app.sh 0.0.0-ci
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SplitTunnel-ci
+          path: dist/SplitTunnel-0.0.0-ci.zip
+          retention-days: 7
