@@ -10,7 +10,7 @@ public struct SiteStatus: Codable, Equatable, Sendable {
     public var reply: Reply
     public var hasNewIPs: Bool
 
-    /// Spec table "route × reply": any failed reply is red; new IPs or tunnel routing is orange.
+    /// Route × reply: any failed reply is red; new IPs or tunnel routing is orange.
     public var level: Level {
         guard reply == .ok else { return .bad }
         if hasNewIPs || route == .tunnel { return .warn }
