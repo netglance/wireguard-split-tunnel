@@ -17,6 +17,32 @@ body:
       placeholder: "0.1.0"
     validations:
       required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: Installed from
+      options:
+        - GitHub release zip
+        - Built from source
+    validations:
+      required: true
+  - type: input
+    id: wireguard
+    attributes:
+      label: WireGuard app version
+      description: From the WireGuard app's About window.
+      placeholder: "1.0.16"
+  - type: dropdown
+    id: vpn
+    attributes:
+      label: Other VPN active?
+      options:
+        - "No"
+        - Tailscale
+        - Corporate or other VPN
+        - Not sure
+    validations:
+      required: true
   - type: textarea
     id: steps
     attributes:
