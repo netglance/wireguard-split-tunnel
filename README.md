@@ -4,22 +4,38 @@
 [![Latest release](https://img.shields.io/github/v/release/netglance/wireguard-split-tunnel)](https://github.com/netglance/wireguard-split-tunnel/releases/latest)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Platform: macOS 15+](https://img.shields.io/badge/platform-macOS%2015%2B-lightgrey)
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-support-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/vpotar)
 
-English | [Русский](#split-tunnel-для-wireguard)
-
-[Install](#install) · [Use](#use) · [How it works](#how-it-works) · [Privacy](#privacy) · [Limits](#limits) · [Build](#build) · [Contributing](#contributing) · [Security](#security) · [Support](#support) · [License](#license)
+[Install](#install) · [Update](#update) · [Use](#use) · [How it works](#how-it-works) · [Privacy](#privacy) · [Limits](#limits) · [Uninstall](#uninstall) · [Troubleshooting](#troubleshooting) · [Contributing](#contributing) · [Security](#security) · [Support](#support) · [License](#license)
 
 A macOS menu bar app that keeps chosen sites outside a WireGuard full tunnel. You add the sites that must bypass the VPN; the app resolves their IP addresses, recomputes the `AllowedIPs` line of your tunnel so those addresses are excluded, and warns you when a site gets a new IP or starts failing, so you know when to update the tunnel in WireGuard.
 
 ## Install
 
-1. Download `SplitTunnel-<version>.zip` from [Releases](https://github.com/netglance/wireguard-split-tunnel/releases), unzip it and move `SplitTunnel.app` to Applications.
-2. The app is not notarized, so macOS blocks the first launch. Open System Settings → Privacy & Security → "Open Anyway", or run:
+Requirements: macOS 15 or later (Apple silicon or Intel; the build is universal) and the [WireGuard app for macOS](https://www.wireguard.com/install/), which this app opens to update the tunnel.
+
+1. Download `SplitTunnel-<version>.zip` and `SplitTunnel-<version>.sha256` from [Releases](https://github.com/netglance/wireguard-split-tunnel/releases) into the same folder.
+2. Verify the download before opening it. In that folder run:
+   ```
+   shasum -a 256 -c SplitTunnel-<version>.sha256
+   ```
+   It must print `SplitTunnel-<version>.zip: OK`.
+3. Unzip it and move `SplitTunnel.app` to Applications.
+4. The app is not notarized, so macOS blocks the first launch. Try to open the app once, then open System Settings → Privacy & Security and click "Open Anyway". Alternatively, run:
    ```
    xattr -dr com.apple.quarantine /Applications/SplitTunnel.app
    ```
 
-Requires macOS 15 or later.
+## Update
+
+The app checks for a new version on launch and about every 24 hours. When one is found, the main window shows "Version … is available — download".
+
+1. Download the new zip and its `.sha256` file and verify them as in Install.
+2. Quit the app (⋯ menu in the panel).
+3. Replace `/Applications/SplitTunnel.app` with the new one.
+4. Repeat the Gatekeeper step: try to open the app once, then "Open Anyway" in Privacy & Security.
+
+Your settings and sites are kept.
 
 ## Use
 
@@ -27,7 +43,15 @@ Requires macOS 15 or later.
 2. Add the sites that must bypass the VPN.
 3. When the app asks, click "Update in WireGuard…" → copy the `AllowedIPs` line → in WireGuard select the tunnel, click Edit, replace the `AllowedIPs` line and Save.
 
+Instead of copying the line, you can click "Save .conf…" in the same window. The app asks for your original `.conf` file, then where to save the new one: a copy of the original with only the `AllowedIPs` line replaced. The private key is read from the original, and the new file is written with mode 0600. Delete the old tunnel in WireGuard and import the new file; On-Demand rules have to be set up again.
+
 The "Local network bypasses the VPN" switch (on by default) keeps your router, printers and other home devices out of the tunnel; turn it off to send them through it. Exclusions already present in your config's `AllowedIPs` are kept, and the tunnel's own `Address` and `DNS` always stay in the tunnel.
+
+Other things to know:
+
+- The app checks your sites every 30 minutes. To check right away, click the ↻ "Check Now" button in the menu bar panel (or "Check Now" in the main window).
+- When you add the first site, macOS asks once for permission to show notifications. They tell you when a site gets a new IP or starts failing.
+- To start the app when you log in, open the ⋯ menu in the panel and turn on "Open at Login".
 
 ## How it works
 
@@ -35,7 +59,15 @@ WireGuard cannot exclude a domain from a full tunnel, only IP ranges. The app re
 
 ## Privacy
 
-The private key is never stored. The only network requests are DNS lookups and HTTPS checks of the sites you add, plus a daily check for a new version on GitHub.
+The app has no account, analytics or telemetry. It stores one file, `~/Library/Application Support/SplitTunnel/state.json`: the tunnel name, the server endpoint, the original `AllowedIPs`, the tunnel's `Address` and `DNS` addresses (kept in the tunnel), the `AllowedIPs` line you last copied or saved, your site list with the IP addresses and results of the last checks, and a few interface settings. The private key is never stored. "Save .conf…" reads it from the original file you pick, writes it only into the new file you choose (mode 0600), and keeps nothing.
+
+The app makes three kinds of network requests, and nothing else:
+
+- DNS lookups through the system resolver for your sites (and their `www.` variant), plus one for `apple.com` to tell a dead network from a mistyped site.
+- One HTTPS GET to `https://<site>/` for each site, with a Safari User-Agent and a 10-second timeout. This runs every 30 minutes and when you click "Check Now". Redirects are followed, so the sites a site redirects to are contacted too.
+- One unauthenticated GET to `https://api.github.com/repos/netglance/wireguard-split-tunnel/releases/latest` on launch and then about every 24 hours, to look for a new version. It uses no disk cache. There is no setting to turn it off.
+
+If `state.json` is unreadable, the app moves it aside as `state.json.<id>.broken` and keeps the newest three such files. macOS itself may also keep window positions in `~/Library/Preferences/com.netglance.splittunnel.plist`.
 
 ## Limits
 
@@ -43,18 +75,27 @@ The private key is never stored. The only network requests are DNS lookups and H
 - One `[Peer]` per config.
 - Any active `utun` VPN (for example a Tailscale exit node or a corporate VPN) is read as "tunnel on". Turn other VPNs off for accurate checks.
 
-## Build
+## Uninstall
 
-```
-swift test
-scripts/make-app.sh <version>
-```
+1. Turn off "Open at Login" in the ⋯ menu of the panel. If you already deleted the app, remove it in System Settings → General → Login Items instead.
+2. Quit the app from the same menu.
+3. Delete `/Applications/SplitTunnel.app`.
+4. Delete the folder `~/Library/Application Support/SplitTunnel`.
+5. Optional: delete `~/Library/Preferences/com.netglance.splittunnel.plist` (window positions).
+6. Optional: remove "Split Tunnel" in System Settings → Notifications.
 
-The app and a zip are written to `dist/`.
+An `AllowedIPs` line you copied into WireGuard stays there. Restore your original line (or import your original `.conf` again) to send all traffic through the tunnel.
+
+## Troubleshooting
+
+- **"Open Anyway" is not shown in Privacy & Security.** Run `xattr -dr com.apple.quarantine /Applications/SplitTunnel.app` in Terminal, then open the app again.
+- **Sites stay red or orange after you pasted the new `AllowedIPs`.** Turn the tunnel off and on in WireGuard so it picks up the new line, then click "Check Now".
+- **The app says "Tunnel on" while WireGuard is off.** Another VPN that uses a `utun` interface (Tailscale, a corporate VPN) is active. Turn it off for accurate checks.
+- **Why `4pda.to` in the examples?** It is a site that blocks many VPN exits, so it shows the problem well. Any site works.
 
 ## Contributing
 
-Contributions are welcome; see [CONTRIBUTING.md](CONTRIBUTING.md).
+Contributions are welcome. Developers: see [CONTRIBUTING.md](CONTRIBUTING.md) for building, testing and the project rules.
 
 ## Security
 
@@ -62,75 +103,12 @@ To report a vulnerability, see [SECURITY.md](SECURITY.md).
 
 ## Support
 
-If the app is useful, you can [buy the author a coffee](https://buymeacoffee.com/vpotar).
+If the app is useful, you can buy the author a coffee:
+
+<a href="https://buymeacoffee.com/vpotar"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me a Coffee" height="48"></a>
 
 ## License
 
-MIT — see LICENSE.
+MIT — see [LICENSE](LICENSE).
 
----
-
-# Split Tunnel для WireGuard
-
-[English](#split-tunnel-for-wireguard) | Русский
-
-[Установка](#установка) · [Использование](#использование) · [Как это работает](#как-это-работает) · [Конфиденциальность](#конфиденциальность) · [Ограничения](#ограничения) · [Сборка](#сборка) · [Участие](#участие) · [Безопасность](#безопасность) · [Поддержка](#поддержка) · [Лицензия](#лицензия)
-
-Приложение в строке меню macOS, которое выводит выбранные сайты из полного туннеля WireGuard. Вы добавляете сайты, которые должны идти мимо VPN; программа находит их IP-адреса, пересчитывает строку `AllowedIPs` вашего туннеля так, чтобы эти адреса в него не попадали, и предупреждает, когда у сайта сменился IP или он перестал отвечать, чтобы вы знали, когда пора обновить туннель в WireGuard.
-
-## Установка
-
-1. Скачайте `SplitTunnel-<версия>.zip` из [Releases](https://github.com/netglance/wireguard-split-tunnel/releases), распакуйте и перенесите `SplitTunnel.app` в «Программы».
-2. Приложение не нотаризовано, поэтому при первом запуске macOS его блокирует. Откройте Системные настройки → Конфиденциальность и безопасность → «Всё равно открыть» или выполните:
-   ```
-   xattr -dr com.apple.quarantine /Applications/SplitTunnel.app
-   ```
-
-Нужна macOS 15 или новее.
-
-## Использование
-
-1. Загрузите конфиг WireGuard (перетащите файл `.conf` или вставьте текст из WireGuard → «Изменить»).
-2. Добавьте сайты, которые должны идти мимо VPN.
-3. Когда программа попросит, нажмите «Обновить в WireGuard…» → скопируйте строку `AllowedIPs` → в WireGuard выберите туннель, нажмите «Изменить», замените строку `AllowedIPs` и сохраните.
-
-Переключатель «Локальная сеть мимо VPN» (по умолчанию включён) оставляет роутер, принтеры и другие домашние устройства вне туннеля; выключите его, чтобы направить их в туннель. Исключения, которые уже есть в `AllowedIPs` вашего конфига, сохраняются, а `Address` и `DNS` самого туннеля всегда остаются в туннеле.
-
-## Как это работает
-
-WireGuard не умеет исключать домены из полного туннеля, только диапазоны IP-адресов. Приложение находит адреса добавленных вами сайтов, вычитает их и ваши локальные сети из `AllowedIPs` конфига и показывает готовую строку для вставки в WireGuard. Затем оно проверяет, что трафик к сайту действительно идёт мимо туннеля и что сайт отвечает, и предупреждает, когда у сайта меняются IP.
-
-## Конфиденциальность
-
-Приватный ключ не сохраняется. Единственные сетевые запросы: DNS-запросы и HTTPS-проверки добавленных вами сайтов, а также ежедневная проверка новой версии на GitHub.
-
-## Ограничения
-
-- Исключаются только добавленные вами домены: картинки и CDN на других доменах всё равно идут через VPN. Добавьте и эти домены.
-- Один `[Peer]` в конфиге.
-- Любой активный VPN на `utun` (например, exit node Tailscale или корпоративный VPN) считается включённым туннелем. Для точных проверок отключите другие VPN.
-
-## Сборка
-
-```
-swift test
-scripts/make-app.sh <версия>
-```
-
-Приложение и zip-архив появятся в `dist/`.
-
-## Участие
-
-Правки приветствуются; см. [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Безопасность
-
-О найденной уязвимости сообщайте по инструкции в [SECURITY.md](SECURITY.md).
-
-## Поддержка
-
-Если программа пригодилась, можно [угостить автора кофе](https://buymeacoffee.com/vpotar).
-
-## Лицензия
-
-MIT — см. LICENSE.
+WireGuard is a registered trademark of Jason A. Donenfeld. This project is not affiliated with or endorsed by the WireGuard project.
